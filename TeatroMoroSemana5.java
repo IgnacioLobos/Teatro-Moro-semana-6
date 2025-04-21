@@ -6,54 +6,54 @@ import java.util.TimerTask;
 
 public class TeatroMoroSemana5 {
 
-    Timer Timer = new Timer();
-    static Timer timerReserva = null;
-
-
     public static void mostrarPlanoAsientos(int filas, int asientosPorFila, boolean[]... sector) {
-    for (int f = 0; f < filas; f++) {
-        System.out.print("Fila " + (f + 1) + ": ");
-        for (int a = 0; a < asientosPorFila; a++) {
-            if (sector[f][a]) {
-                System.out.print("[X]");
-            } else {
-                System.out.print("[O]");
+        for (int f = 0; f < filas; f++) {
+            System.out.print("Fila " + (f + 1) + ": ");
+            for (int a = 0; a < asientosPorFila; a++) {
+                if (sector[f][a]) {
+                    System.out.print("[X]");
+                } else {
+                    System.out.print("[O]");
+                }
             }
+            System.out.println();
         }
-        System.out.println();
     }
-}
     
     public static boolean seleccionarAsiento(Scanner sc, int filas, int asientosPorFila, boolean[]... sector) {
-    System.out.print("\nSeleccione una fila (1-" + filas + ") o 0 para salir: ");
-    int filaSeleccionada = sc.nextInt();
+        System.out.print("\nSeleccione una fila (1-" + filas + ") o 0 para salir: ");
+        int filaSeleccionada = sc.nextInt();
 
-    if (filaSeleccionada == 0) {
-        return false;
-    } else if (filaSeleccionada < 1 || filaSeleccionada > filas) {
-        System.out.println("Fila inválida.");
-        return false;
+        if (filaSeleccionada == 0) {
+            return false;
+        } else if (filaSeleccionada < 1 || filaSeleccionada > filas) {
+            System.out.println("Fila inválida.");
+            return false;
+        }
+
+        System.out.print("Seleccione un asiento (1-" + asientosPorFila + "): ");
+        int asientoSeleccionado = sc.nextInt();
+
+        if (asientoSeleccionado < 1 || asientoSeleccionado > asientosPorFila) {
+            System.out.println("Asiento inválido.");
+            return false;
+        }
+
+        boolean[] fila = sector[filaSeleccionada - 1];
+        if (fila[asientoSeleccionado - 1]) {
+            System.out.println("Ese asiento ya está ocupado.");
+            return false;
+        } else {
+            fila[asientoSeleccionado - 1] = true;
+            System.out.println("Reserva exitosa: Fila " + filaSeleccionada + " – Asiento " + asientoSeleccionado);
+            return true;
+        }
     }
 
-    System.out.print("Seleccione un asiento (1-" + asientosPorFila + "): ");
-    int asientoSeleccionado = sc.nextInt();
-
-    if (asientoSeleccionado < 1 || asientoSeleccionado > asientosPorFila) {
-        System.out.println("Asiento inválido.");
-        return false;
-    }
-
-    boolean[] fila = sector[filaSeleccionada - 1];
-    if (fila[asientoSeleccionado - 1]) {
-        System.out.println("Ese asiento ya está ocupado.");
-        return false;
-    } else {
-        fila[asientoSeleccionado - 1] = true;
-        System.out.println("Reserva exitosa: Fila " + filaSeleccionada + " – Asiento " + asientoSeleccionado);
-        return true;
-    }
-}
-
+    static Timer timerReserva = null;
+    static boolean reservaPendiente = false;
+    static int reservaFila = -1;
+    static int reservaAsiento = -1;
                 
     public static boolean seleccionarReserva(Scanner sc, int filas, int asientosPorFila, boolean[]... sector) {
         System.out.print("\nSeleccione una fila (1-" + filas + ") o 0 para salir: ");
@@ -82,6 +82,8 @@ public class TeatroMoroSemana5 {
         } else {
             fila[asientoSeleccionado - 1] = true;
             System.out.println("Reserva exitosa: Fila " + filaSeleccionada + " – Asiento " + asientoSeleccionado);
+            
+            
 
             timerReserva = new Timer();
 
@@ -92,10 +94,6 @@ public class TeatroMoroSemana5 {
                 @Override
 
                 public void run() {
-
-                int reservaFila = filaSeleccionada;
-                int reservaAsiento = asientoSeleccionado;
-                boolean reservaPendiente = true;
                 
                     fila[asientoTemporal - 1] = false;
                     System.out.println("!! La Reserva de Fila " + filaTemporal + " Asiento :" + asientoTemporal + " fue Cancelada por tiempo de espera");
@@ -103,13 +101,23 @@ public class TeatroMoroSemana5 {
                     reservaFila = -1;
                     reservaAsiento = 1;
                     timerReserva.cancel();
-
                 }
             };
             timerReserva.schedule(tareadeCancelacion, 600000);
+            
+
         }
         return true;
     }
+   
+
+        
+
+
+
+    
+    
+  
     
     public static double calcularDescuento(double precioBase, int promocion) {
         switch (promocion) {
@@ -138,13 +146,7 @@ public class TeatroMoroSemana5 {
         Scanner scanner = new Scanner(System.in);
         Scanner sc = new Scanner(System.in);
 
-        int entradasSolicitadas;
-        int entradasConfirmadas = 0;
-        byte entradaElegida;
-        String tipoEntradaElegida = "";
-        String tarifaEntradaElegida = "";
-        double valorEntradaElegida = 0;
-        double totalValorEntradaElegida = 0;
+
         
         int seguirComprando = 1;
         int opcionMenuPrincipal;
@@ -166,8 +168,7 @@ public class TeatroMoroSemana5 {
         int filasPlateaAlta = 3;
         int asientosPlateaAlta = 12;
         int columnasPalco = 4;
-        int asientosPalco = 8;
-        
+        int asientosPalco = 8;    
         
         boolean[] filaVip1 = new boolean [asientosVip];
         boolean[] filaVip2 = new boolean [asientosVip];    
@@ -188,22 +189,31 @@ public class TeatroMoroSemana5 {
         boolean[] filaSeleccionada2 = null;
         int asientoSel = 0;
         
-        int j = 0;
-        String[] carrito = new String[99];
-        String[] historialDescuento = new String[99];
-        int[] cantidadesPorEntrada = new int[99];    
-        double[] historialPrecio = new double[99];
+
         double montoPago;
-        double totalCompras = 0;
         double vuelto;
         int menuCarrito;
         
-        
-        for (int indice = 0; indice < 10; indice++) {
-        }
+        int j = 0;
+        String[] carrito = new String[99];
+        int[] cantidadesPorEntrada = new int[99];         
+        double[] historialPrecio = new double[99];        
+        String[] historialDescuento = new String[99];
+        double totalCompras = 0;
 
+        String[] carritoReserva = new String[99];
+        int [] cantidadesPorEntradaReserva = new int[99]; 
+        double[] historialPrecioReserva = new double [99];
+        String[] historialDescuentoReserva = new String[99];       
+        double totalComprasReserva = 0;
         
-        
+        int entradasSolicitadas;
+        int entradasConfirmadas = 0;
+        byte entradaElegida;
+        String tipoEntradaElegida = "";
+        String tarifaEntradaElegida = "";
+        double valorEntradaElegida = 0;
+        double totalValorEntradaElegida = 0;       
 
         System.out.println("Hola. Bienvenido/a a la boleteria virtual del teatro Moro.");
         for (int i = 0; ; i++) {
@@ -482,7 +492,7 @@ public class TeatroMoroSemana5 {
                 }
                 case 2 -> {
 
-                        System.out.println(saltoDeLinea+"===========================" +saltoDeLinea+"Has seleccionado 'Reservar entradas:'" +saltoDeLinea+ "Por favor, escribe el numero indicado para escoger el tipo de entrada que deseas. (1, 2, 3 o 4.)" + saltoDeLinea + saltoDeLinea+ "=========TIPOS DE ENTRADAS========="  + saltoDeLinea + saltoDeLinea + "1- VIP =================== $" + precioVip + saltoDeLinea + "2- Platea baja =========== $" + precioPlateaBaja + saltoDeLinea + "3- Platea alta =========== $"+precioPlateaAlta + saltoDeLinea + "4- Palco ================= $" + precioPalco);                                           
+                        System.out.println(saltoDeLinea+"===========================" +saltoDeLinea+"Has seleccionado 'Reservar entradas:'" +saltoDeLinea+ "Por favor, escribe el numero indicado para escoger el tipo de entrada que deseas. (1, 2, 3, 4 o 5.)" + saltoDeLinea + saltoDeLinea+ "=========RESERVA DE ENTRADAS========="  + saltoDeLinea + saltoDeLinea + "1- VIP =================== $" + precioVip + saltoDeLinea + "2- Platea baja =========== $" + precioPlateaBaja + saltoDeLinea + "3- Platea alta =========== $"+precioPlateaAlta + saltoDeLinea + "4- Palco ================= $" + precioPalco +saltoDeLinea+ "5- Menu Principal");                                           
                         opcionMenuReserva = scanner.nextInt();
                         
                         switch  (opcionMenuReserva) {
@@ -506,9 +516,20 @@ public class TeatroMoroSemana5 {
 
                                             System.out.println("Desea reservar esta entrada con un descuento de promocion?" + saltoDeLinea+ "(Escriba 1 para Estudiantes, 2 para Tercera edad. 0 Para no aplicar promocion.)");
                                             promocion = scanner.nextInt();
-                                            totalValorEntradaElegida = calcularDescuento(precioVip, promocion); 
-                                    }
-                                        break;
+                                            totalValorEntradaElegida = calcularDescuento(precioVip, promocion);                                            
+                                            
+                                            carritoReserva[j] = tipoEntradaElegida;
+                                            cantidadesPorEntradaReserva[j] = entradasSolicitadas;
+                                            historialPrecioReserva[j] = totalValorEntradaElegida;
+                                            historialDescuentoReserva[j] = tarifaEntradaElegida;
+                                            totalComprasReserva += totalValorEntradaElegida;
+                                            j= j+1;
+                                            entradasConfirmadas++;  
+                                        }
+                                                                                        
+  
+                                            
+                                            
                                 }
                             case 2 -> {
                                 System.out.println("Reservando entradas de Platea Baja ");
@@ -534,8 +555,17 @@ public class TeatroMoroSemana5 {
                                     reservaPendiente = false;
                                     reservaFila = -1;
                                     reservaAsiento = 1;
+                                    
+                                    carrito[j] += carritoReserva[j];
+                                    cantidadesPorEntrada[j] += cantidadesPorEntradaReserva[j];
+                                    historialPrecio[j] += historialPrecioReserva[j];
+                                    historialDescuento[j] += historialDescuentoReserva[j];
+                                    totalCompras += totalComprasReserva;                                    
+                                break;    
+                                } else {
+                                    System.out.println("No hay reservas pendientes por confirmar.");
                                 }
-                            }    
+                            }
                             case 0 -> {
                                 return;
                                 
