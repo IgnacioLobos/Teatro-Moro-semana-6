@@ -215,17 +215,10 @@ public class TeatroMoroSemana5 {
             System.out.println("4. Ver asientos disponibles");
             System.out.println("5. Ver carrito");
             System.out.println("6. Salir");
-            
-        while (opcionMenuPrincipal<1 ||opcionMenuPrincipal > 6  ) {
-            try {
-                System.out.print(saltoDeLinea + "Seleccione una opcion (Escriba 1, 2, 3, 4, 5, o 6): ");
-                opcionMenuPrincipal = scanner.nextInt();
+            System.out.print(saltoDeLinea + "Seleccione una opcion (Escriba 1, 2, 3, 4, 5, o 6 para desplazarse por el menu): ");
 
-            } catch (InputMismatchException e) {
-                System.out.println("Entrada invalida.");
-                scanner.nextLine(); 
-            }
-        }            
+            opcionMenuPrincipal = scanner.nextInt();
+
             switch (opcionMenuPrincipal) {
                 case 1 -> {
                     do {
@@ -351,7 +344,7 @@ public class TeatroMoroSemana5 {
                     } while (entradaElegida < 1 || entradaElegida > 3);                    
                 }
                 case 2 -> {
-
+                    do {
                         System.out.println(saltoDeLinea + "===========================" + saltoDeLinea + "Has seleccionado 'Reservar entradas:'" + saltoDeLinea + saltoDeLinea + "=========RESERVA DE ENTRADAS=========" + saltoDeLinea + saltoDeLinea + "1- VIP =================== $" + precioVip + saltoDeLinea + "2- Platea baja =========== $" + precioPlateaBaja + saltoDeLinea + "3- Platea alta =========== $" + precioPlateaAlta + saltoDeLinea + "4- Confirmar reserva"+ saltoDeLinea + "5- Volver al Menu Principal" +saltoDeLinea + saltoDeLinea + "Por favor, escribe el numero indicado para desplazarte por el Menu. (1, 2, 3, 4 o 5.)");
                         opcionMenuReserva = scanner.nextInt();
                         switch (opcionMenuReserva) {
@@ -484,10 +477,11 @@ public class TeatroMoroSemana5 {
                                 }
                             }
                             case 5 -> {
-                                
+                                seguirComprando = 0;
                                 break;
                             }
                         }
+                    } while (seguirComprando == 1);
                 }
                 
                 case 3 -> {
